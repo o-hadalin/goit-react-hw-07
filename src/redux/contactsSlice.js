@@ -6,6 +6,7 @@ const initialState = {
   items: [],
   isLoading: false,
   error: null,
+  deletingIds: [],
 };
 
 const contactsSlice = createSlice({
@@ -28,10 +29,22 @@ const contactsSlice = createSlice({
       .addCase(addContact.fulfilled, (state, action) => {
         state.items.push(action.payload);
       })
+      .addCase(deleteContact.pending, (state, action) => {
+        state.deletingIds.push(action.meta.arg);
+      })
       .addCase(deleteContact.fulfilled, (state, action) => {
         state.items = state.items.filter(
           contact => contact.id !== action.payload
         );
+        state.deletingIds = state.deletingIds.filter(
+          id => id !== action.meta.arg
+        );
+      })
+      .addCase(deleteContact.rejected, (state, action) => {
+        state.deletingIds = state.deletingIds.filter(
+          id => id !== action.meta.arg
+        );
+        state.error = action.payload;
       });
   },
 });
