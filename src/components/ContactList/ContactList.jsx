@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import Contact from '../Contact/Contact';
 import styles from './ContactList.module.css';
@@ -30,4 +29,4 @@ const ContactList = () => {
   );
 };
 
-export default memo(ContactList);
+export default ContactList;
