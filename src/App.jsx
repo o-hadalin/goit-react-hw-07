@@ -4,12 +4,13 @@ import ContactForm from './components/ContactForm/ContactForm';
 import ContactList from './components/ContactList/ContactList';
 import SearchBox from './components/SearchBox/SearchBox';
 import { fetchContacts } from './redux/contactsOps';
+import { selectIsLoading, selectError } from './redux/contactsSlice';
 import './App.css';
-import { selectIsLoading } from './redux/contactsSlice';
 
 const App = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
 
   useEffect(() => {
     dispatch(fetchContacts());
@@ -23,9 +24,11 @@ const App = () => {
       <SearchBox />
       {isLoading ? (
         <p>Loading... Please wait a little</p>
+      ) : error ? (
+        <p>Error: {error}</p>
       ) : (
         <ContactList />
-      )}{' '}
+      )}
     </div>
   );
 };

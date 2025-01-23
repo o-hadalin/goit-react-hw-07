@@ -17,6 +17,7 @@ const contactsSlice = createSlice({
     builder
       .addCase(fetchContacts.pending, state => {
         state.isLoading = true;
+        state.error = null;
       })
       .addCase(fetchContacts.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -24,10 +25,19 @@ const contactsSlice = createSlice({
       })
       .addCase(fetchContacts.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.error = action.payload || 'Failed to load contacts';
+      })
+      .addCase(addContact.pending, state => {
+        state.isLoading = true;
+        state.error = null;
       })
       .addCase(addContact.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.items.push(action.payload);
+      })
+      .addCase(addContact.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || 'Failed to add contact';
       })
       .addCase(deleteContact.pending, (state, action) => {
         state.deletingIds.push(action.meta.arg);
@@ -44,7 +54,7 @@ const contactsSlice = createSlice({
         state.deletingIds = state.deletingIds.filter(
           id => id !== action.meta.arg
         );
-        state.error = action.payload;
+        state.error = action.payload || 'Failed to delete contact';
       });
   },
 });
@@ -52,6 +62,7 @@ const contactsSlice = createSlice({
 export const selectContacts = state => state.contacts.items;
 export const selectFilter = state => state.filters.name;
 export const selectIsLoading = state => state.contacts.isLoading;
+export const selectError = state => state.contacts.error;
 
 export const selectFilteredContacts = createSelector(
   [selectContacts, selectFilter],
